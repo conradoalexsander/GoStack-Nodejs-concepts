@@ -1,33 +1,32 @@
-const express = require("express");
-const cors = require("cors");
-
-// const { uuid } = require("uuidv4");
+const express = require('express');
+const cors = require('cors');
+const router = require('./routes');
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
-const repositories = [];
+app.use(logRequests);
+app.use(router);
 
-app.get("/repositories", (request, response) => {
-  // TODO
-});
+function logRequests(request, response, next) {
+	const { method, url } = request;
+	const loglabel = `[${method.toUpperCase()}] ${url} - ${JSON.stringify(
+		request.body
+	)}`;
+	console.log(loglabel);
 
-app.post("/repositories", (request, response) => {
-  // TODO
-});
+	return next(); // Próximo Middleware
+}
 
-app.put("/repositories/:id", (request, response) => {
-  // TODO
-});
+function errorHandler(err, req, res, next) {
+	if (err) {
+		return res.status(400).json({ error: err.message });
+	}
+	return next();
+}
 
-app.delete("/repositories/:id", (request, response) => {
-  // TODO
-});
-
-app.post("/repositories/:id/like", (request, response) => {
-  // TODO
-});
+app.use((err, req, res, next) => errorHandler(err, req, res, next));
 
 module.exports = app;
