@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { uuid, isUuid } = require('uuidv4');
+const { uuid } = require('uuidv4');
 
 const repositories = [
 	{
